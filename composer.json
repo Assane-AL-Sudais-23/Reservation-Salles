@@ -1,0 +1,21 @@
+{
+    "name": "assane/reservation-salles",
+    "autoload": {
+        "psr-4": {
+            "Assane\\ReservationSalles\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Assane AL Sudais",
+            "email": "assanesidyalsudais2004@gmail.com"
+        }
+    ],
+    "require": {
+        "nikic/fast-route": "^1.3",
+        "respect/validation": "^2.4",
+        "illuminate/database": "^12.0",
+        "php-di/php-di": "^7.0 ",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
