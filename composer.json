@@ -2,7 +2,8 @@
     "name": "assane/reservation-salles",
     "autoload": {
         "psr-4": {
-            "Assane\\ReservationSalles\\": "src/"
+            "App\\": "src/",
+            "Database\\": "database/"
         }
     },
     "authors": [
