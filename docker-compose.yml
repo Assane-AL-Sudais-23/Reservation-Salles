@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: .docker/php/Dockerfile
-    image: ${APP_NAME}-app:${APP_VERSION:-latest}
+    image: ${DOCKERHUB_USERNAME:-alsudais23}/${APP_NAME}-app:${APP_VERSION:-latest}
     container_name: php_app
     restart: unless-stopped
     working_dir: /var/www

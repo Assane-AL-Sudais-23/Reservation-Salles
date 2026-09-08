@@ -9,6 +9,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: alsudais23/reservation-salles-app
 
     steps:
       # Étape 1 : Récupérer le code source du dépôt Git
@@ -39,5 +41,5 @@ jobs:
           file: .docker/php/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/reservation-salles-app:${{ env.GIT_TAG }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/reservation-salles-app:latest
+            ${{ env.IMAGE_NAME }}:${{ env.GIT_TAG }}
+            ${{ env.IMAGE_NAME }}:latest
