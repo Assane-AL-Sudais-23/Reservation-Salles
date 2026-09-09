@@ -98,3 +98,17 @@ Les regles metier peut variables si on ne les separer pas quand les changer on r
 
 # Quel composant doit interpréter le handler retourné ?
     C'est le dispatcher charge et execute le handler
+
+# Quelle différence existe entre injection et conteneur ?
+    l'injection est un principe tandis que le conteneur est un outils qui automatise ce principe
+
+# Qu’est-ce que l’autowiring ?
+    C'est une fonctionnalité d'un conteneur d'injection de dépendances qui permet de résoudre et d'instancier automatiquement les dépendances d'une classe
+
+# Pourquoi les interfaces nécessitent-elles une définition ?
+    les interfaces sont des contrat abstract, ils ne sont pas instanciable 
+
+# Pourquoi limiter $container->get() au point d’entrée ?
+
+# Quel anti-pattern apparaît si toutes les classes interrogent le conteneur ?
+
