@@ -66,3 +66,15 @@ Les regles metier peut variables si on ne les separer pas quand les changer on r
     A la reception du controller avec $POST des donnes venant d'un formulaire ou s'il doivent etre persister en BDD
 
 # Le DTO doit-il contenir la règle de chevauchement ?
+
+# Eloquent constitue-t-il déjà un accès aux données ?
+    Oui Eloquent est une couche aux acces de donnees
+
+# Pourquoi ajouter un Repository au-dessus d’Eloquent ?
+    c'est pour eviter une dependance forte 
+
+# Cette abstraction est-elle toujours nécessaire ?
+    Non Elequent n'est pas du SQL seulement
+    
+# Quel avantage apporte-t-elle ?
+
