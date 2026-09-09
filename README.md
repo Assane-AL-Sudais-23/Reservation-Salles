@@ -42,7 +42,17 @@
 
 # Pourquoi les données initiales doivent-elles être reproductibles ?
     Pour garantier les test automatises fiables
+
 # Comment empêcher les doublons ?
 
+# Pourquoi séparer la validation syntaxique des règles métier ?
+Les regles metier peut variables si on ne les separer pas quand les changer on risque de toucher entierrement les classes validation
 
+# Pourquoi créer une interface de validation ?
+    c'est pour eviter une couplage forte entre deux classe et faire evolution a l'extension
+
+# Pourquoi le validateur ne doit-il pas enregistrer les données ?
+    c'est pas son tache le validateur doit s'occuper a gerer la validation des donnees pour respecter le principe de S de SOLID
+
+# Comment retourner plusieurs erreurs en une seule fois ?
 
