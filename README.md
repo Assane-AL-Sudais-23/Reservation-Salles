@@ -78,3 +78,12 @@ Les regles metier peut variables si on ne les separer pas quand les changer on r
     
 # Quel avantage apporte-t-elle ?
 
+# Pourquoi ces règles ne sont-elles pas dans le contrôleur ?
+    Le role du controller est de gerer les vues et d'intercepter les requetes si on la donne les regles metier le principe du S de SOLID est violé
+
+# Pourquoi le service dépend-il d’une interface de Repository ?
+    C'est pour eviter le couplage fort et applique la Dependancy Inversion principle
+
+# Quelle exception doit être levée en cas de conflit ?
+
+# Comment tester le service sans MySQL ?
