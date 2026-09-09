@@ -4,17 +4,17 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
+use Database\Seed;
 use Database\Migrations\CreateUsersTable;
 use Database\Migrations\CreateSallesTable;
 use Database\Migrations\CreateReservationsTable;
 
-// 1. Chargement de l'environnement et de la base de données
+// 1. Chargement de l'environnement
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
 require_once __DIR__ . '/../config/database.php';
 
-// 2. Récupération de la commande tapée dans le terminal
 $command = $argv[1] ?? null;
 
 if ($command === 'assane:execute') {
@@ -22,7 +22,6 @@ if ($command === 'assane:execute') {
     echo " Exécution des migrations de la base...\n";
     echo "========================================\n\n";
 
-    // Registre des migrations à exécuter dans l'ordre (respect des dépendances FK)
     $migrations = [
         new CreateUsersTable(),
         new CreateSallesTable(),
@@ -37,12 +36,23 @@ if ($command === 'assane:execute') {
     exit(0);
 }
 
+if ($command === 'assane:seed') {
+    echo "========================================\n";
+    echo " Remplissage des données (Seeding)...\n";
+    echo "========================================\n\n";
+
+    $seeder = new Seed();
+    $seeder->run();
+
+    echo "\n✔ Le remplissage de la base de données est terminé.\n";
+    exit(0);
+}
+
 if ($command === 'assane:rollback') {
     echo "========================================\n";
     echo " Annulation (Rollback) des migrations...\n";
     echo "========================================\n\n";
 
-    // Ordre inverse pour supprimer les tables filles avant les mères (FK)
     $migrations = [
         new CreateReservationsTable(),
         new CreateSallesTable(),
@@ -57,8 +67,8 @@ if ($command === 'assane:rollback') {
     exit(0);
 }
 
-// Commande inconnue
 echo "Commande invalide. Utilisation :\n";
 echo "  php bin/assane assane:execute   : Exécuter les migrations\n";
+echo "  php bin/assane assane:seed      : Remplir la base avec les données\n";
 echo "  php bin/assane assane:rollback  : Annuler les migrations\n";
 exit(1);

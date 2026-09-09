@@ -37,4 +37,12 @@
 # Pourquoi convertir les dates en objets ?
     Convertir les dates en objet donne la possibilite de manipuler des methodes comme le format date
 
+# Quelle différence existe entre migration et seeder ?
+    Les migrations construisent la structures et les seeders remplissents les tables
+
+# Pourquoi les données initiales doivent-elles être reproductibles ?
+    Pour garantier les test automatises fiables
+# Comment empêcher les doublons ?
+
+
 
