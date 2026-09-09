@@ -87,3 +87,14 @@ Les regles metier peut variables si on ne les separer pas quand les changer on r
 # Quelle exception doit être levée en cas de conflit ?
 
 # Comment tester le service sans MySQL ?
+
+# Pourquoi FastRoute ne construit-il pas lui-même le contrôleur ?
+    La seule et unique responsabilite du FastRouter est d'analyser l'URL demander ainsi que les methodes http(POST, GET)
+
+# Quelle différence existe entre 404 et 405 ?
+    404 indique l'url n'existe pas tandis que 405 indique l'url existe mais la methode n'est pas autoriser
+
+# Pourquoi contraindre {id} avec \d+ ?
+
+# Quel composant doit interpréter le handler retourné ?
+    C'est le dispatcher charge et execute le handler
