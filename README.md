@@ -26,5 +26,15 @@
     Avec ORM on manipule des objet qui traduit les action en requetes SQL hors ecrit SQL a la main interagit 
     directe avec la base
 
+# Quel type de relation Eloquent avez-vous utilisé ?
+    Il s'agit de la relation one-to-many, une salle peut avoir plusieurs reservation
+
+# Pourquoi déclarer $fillable ou $guarded ?
+    avec fillable on definit les champs a saisir avec guarded on definis les champs a proteger
+
+# Pourquoi convertir active en booléen ?
+    pour eviter de comparer avec des entier en chaines 
+# Pourquoi convertir les dates en objets ?
+    Convertir les dates en objet donne la possibilite de manipuler des methodes comme le format date
 
 
