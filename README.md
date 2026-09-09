@@ -56,3 +56,13 @@ Les regles metier peut variables si on ne les separer pas quand les changer on r
 
 # Comment retourner plusieurs erreurs en une seule fois ?
 
+# Quelle différence existe entre DTO et modèle Eloquent ?
+    Un DTO est un simple conteneur de donnees alors un model Eloquent est une entité liée a la base de données
+
+# Pourquoi le DTO ne doit-il pas appeler save() ?
+    Son role est de transporter les donner sinon il viole la principe du S de SOLID
+
+# À quel moment transforme-t-on les chaînes en dates ?
+    A la reception du controller avec $POST des donnes venant d'un formulaire ou s'il doivent etre persister en BDD
+
+# Le DTO doit-il contenir la règle de chevauchement ?
