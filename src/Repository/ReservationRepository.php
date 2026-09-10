@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-    namespace App\Repository\Eloquent;
+    namespace App\Repository;
 
     use App\Model\Reservation;
     use App\DTO\CreerReservationDTO;

@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
     use function DI\autowire;
     use function DI\factory;
@@ -9,9 +9,9 @@ declare(strict_types=1);
     use function FastRoute\simpleDispatcher;
 
     use App\Repository\SalleRepositoryInterface;
-    use App\Repository\Eloquent\SalleRepository as EloquentSalleRepository;
+    use App\Repository\SalleRepository;
     use App\Repository\ReservationRepositoryInterface;
-    use App\Repository\Eloquent\ReservationRepository as EloquentReservationRepository;
+    use App\Repository\ReservationRepository;
 
     use App\Service\CreerReservationService;
     use App\Service\AnnulerReservationService;
@@ -23,15 +23,17 @@ declare(strict_types=1);
     use App\Application;
 
     return [
-        Capsule::class => factory(require __DIR__ . '/database.php'),
+        Capsule::class => factory(function () {
+            return require __DIR__ . '/database.php';
+        }),
 
         Dispatcher::class => factory(function (): Dispatcher {
             $routesDefiner = require dirname(__DIR__) . '/routes/web.php';
             return simpleDispatcher($routesDefiner);
         }),
 
-        SalleRepositoryInterface::class => autowire(EloquentSalleRepository::class),
-        ReservationRepositoryInterface::class => autowire(EloquentReservationRepository::class),
+        SalleRepositoryInterface::class => autowire(SalleRepository::class),
+        ReservationRepositoryInterface::class => autowire(ReservationRepository::class),
 
         SalleValidator::class => autowire(SalleValidator::class),
         ReservationValidator::class => autowire(ReservationValidator::class),

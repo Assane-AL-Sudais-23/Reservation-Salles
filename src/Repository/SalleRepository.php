@@ -1,27 +1,27 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
-namespace App\Repository\Eloquent;
+    namespace App\Repository;
 
-use App\Model\Salle;
-use App\DTO\CreerSalleDTO;
-use App\Repository\SalleRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
+    use App\Model\Salle;
+    use App\DTO\CreerSalleDTO;
+    use App\Repository\SalleRepositoryInterface;
+    use Illuminate\Database\Eloquent\Collection;
 
-class SalleRepository implements SalleRepositoryInterface
-{
-    public function listerSalles(): Collection
+    class SalleRepository implements SalleRepositoryInterface
     {
-        return Salle::all();
-    }
+        public function listerSalles(): Collection
+        {
+            return Salle::all();
+        }
 
-    public function retrouverSalleParId(int $id): ?Salle
-    {
-        return Salle::find($id);
-    }
+        public function retrouverSalleParId(int $id): ?Salle
+        {
+            return Salle::find($id);
+        }
 
-    public function enregistrerSalle(CreerSalleDTO $dto): Salle
-    {
-        return Salle::create($dto->toArray());
+        public function enregistrerSalle(CreerSalleDTO $dto): Salle
+        {
+            return Salle::create($dto->toArray());
+        }
     }
-}
