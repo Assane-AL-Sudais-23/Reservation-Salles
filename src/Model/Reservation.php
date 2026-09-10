@@ -1,6 +1,5 @@
 <?php
-
-    declare(strict_types=1);
+declare(strict_types=1);
 
     namespace App\Model;
 
@@ -9,9 +8,7 @@
 
     class Reservation extends Model
     {
-
         protected $table = 'reservations';
-
 
         protected $fillable = [
             'user_id',
@@ -20,7 +17,6 @@
             'date_fin',
             'statut',
         ];
-
 
         protected $casts = [
             'id' => 'integer',
@@ -31,7 +27,6 @@
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-
 
         public function salle(): BelongsTo
         {

@@ -1,6 +1,5 @@
 <?php
-
-    declare(strict_types=1);
+declare(strict_types=1);
 
     namespace App\Model;
 
@@ -9,17 +8,14 @@
 
     class Salle extends Model
     {
-        
         protected $table = 'salles';
 
-        
         protected $fillable = [
             'nom',
             'capacite',
             'description',
         ];
 
-    
         protected $casts = [
             'id' => 'integer',
             'capacite' => 'integer',
@@ -27,7 +23,6 @@
             'updated_at' => 'datetime',
         ];
 
-        
         public function reservations(): HasMany
         {
             return $this->hasMany(Reservation::class, 'salle_id', 'id');

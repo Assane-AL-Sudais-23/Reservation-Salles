@@ -1,15 +1,23 @@
 services:
-  # 1. Conteneur PHP
+  # 1. Conteneur PHP (FPM)
   app:
     build:
       context: .
       dockerfile: .docker/php/Dockerfile
-    image: ${DOCKERHUB_USERNAME:-alsudais23}/${APP_NAME}-app:${APP_VERSION:-latest}
+    image: ${DOCKERHUB_USERNAME:-alsudais23}/${APP_NAME:-reservation}-${APP_VERSION:-latest}
     container_name: php_app
     restart: unless-stopped
     working_dir: /var/www
     volumes:
       - .:/var/www
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-reservation_db}
+      - DB_USERNAME=root
+      - DB_PASSWORD=${DB_PASSWORD:-root}
+    depends_on:
+      - db
     networks:
       - app-network
 
@@ -23,6 +31,8 @@ services:
     volumes:
       - .:/var/www
       - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
     networks:
       - app-network
 
@@ -32,8 +42,8 @@ services:
     container_name: mysql_db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE:-reservation_db}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
     ports:
       - "3306:3306"
     volumes:

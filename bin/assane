@@ -1,7 +1,4 @@
-#!/usr/bin/env php
 <?php
-
-require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
 use Database\Seed;
@@ -9,62 +6,71 @@ use Database\Migrations\CreateUsersTable;
 use Database\Migrations\CreateSallesTable;
 use Database\Migrations\CreateReservationsTable;
 
-// 1. Chargement de l'environnement
+require_once __DIR__ . '/../vendor/autoload.php';
+
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
-require_once __DIR__ . '/../config/database.php';
+if (file_exists(__DIR__ . '/../config/database.php')) {
+    require_once __DIR__ . '/../config/database.php';
+}
 
 $command = $argv[1] ?? null;
 
-if ($command === 'assane:execute') {
-    echo "========================================\n";
-    echo " Exécution des migrations de la base...\n";
-    echo "========================================\n\n";
+try {
+    if ($command === 'assane:execute') {
+        echo "========================================\n";
+        echo " Exécution des migrations de la base...\n";
+        echo "========================================\n\n";
 
-    $migrations = [
-        new CreateUsersTable(),
-        new CreateSallesTable(),
-        new CreateReservationsTable(),
-    ];
+        $migrations = [
+            new CreateUsersTable(),
+            new CreateSallesTable(),
+            new CreateReservationsTable(),
+        ];
 
-    foreach ($migrations as $migration) {
-        $migration->up();
+        foreach ($migrations as $migration) {
+            $migration->up();
+        }
+
+        echo "\n✔ Toutes les migrations ont été exécutées avec succès.\n";
+        exit(0);
     }
 
-    echo "\n✔ Toutes les migrations ont été exécutées avec succès.\n";
-    exit(0);
-}
+    if ($command === 'assane:seed') {
+        echo "========================================\n";
+        echo " Remplissage des données (Seeding)...\n";
+        echo "========================================\n\n";
 
-if ($command === 'assane:seed') {
-    echo "========================================\n";
-    echo " Remplissage des données (Seeding)...\n";
-    echo "========================================\n\n";
+        $seeder = new Seed();
+        $seeder->run();
 
-    $seeder = new Seed();
-    $seeder->run();
-
-    echo "\n✔ Le remplissage de la base de données est terminé.\n";
-    exit(0);
-}
-
-if ($command === 'assane:rollback') {
-    echo "========================================\n";
-    echo " Annulation (Rollback) des migrations...\n";
-    echo "========================================\n\n";
-
-    $migrations = [
-        new CreateReservationsTable(),
-        new CreateSallesTable(),
-        new CreateUsersTable(),
-    ];
-
-    foreach ($migrations as $migration) {
-        $migration->down();
+        echo "\n✔ Le remplissage de la base de données est terminé.\n";
+        exit(0);
     }
 
-    echo "\n✔ Rollback terminé avec succès.\n";
-    exit(0);
+    if ($command === 'assane:rollback') {
+        echo "========================================\n";
+        echo " Annulation (Rollback) des migrations...\n";
+        echo "========================================\n\n";
+
+        $migrations = [
+            new CreateReservationsTable(),
+            new CreateSallesTable(),
+            new CreateUsersTable(),
+        ];
+
+        foreach ($migrations as $migration) {
+            $migration->down();
+        }
+
+        echo "\n✔ Rollback terminé avec succès.\n";
+        exit(0);
+    }
+} catch (\Throwable $e) {
+    echo "\n Erreur d'exécution : " . $e->getMessage() . "\n";
+    echo "Fichier : " . $e->getFile() . ":" . $e->getLine() . "\n";
+    exit(1);
 }
 
 echo "Commande invalide. Utilisation :\n";

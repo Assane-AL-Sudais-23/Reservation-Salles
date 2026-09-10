@@ -1,6 +1,5 @@
 <?php
-
-    namespace Database;
+namespace Database;
 
     use Database\Seeders\SalleSeeder;
 
