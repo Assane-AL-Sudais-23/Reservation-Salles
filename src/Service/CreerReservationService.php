@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
     namespace App\Service;
 
@@ -10,7 +10,6 @@ declare(strict_types=1);
     use App\Model\Salle;
     use App\Repository\ReservationRepositoryInterface;
     use App\Repository\SalleRepositoryInterface;
-    use DateTimeImmutable;
 
     class CreerReservationService
     {
@@ -30,9 +29,17 @@ declare(strict_types=1);
             $this->validerDateDebutFuture($dto->dateDebut);
             $this->validerChronologieDates($dto->dateDebut, $dto->dateFin);
             $this->validerDureeMaximales($dto->dateDebut, $dto->dateFin);
-            $this->verifierAbsenceDeConflit($dto);
+            $this->verifierAbsenceDeConflit($dto->salleId, $dto->dateDebut, $dto->dateFin);
 
-            return $this->reservationRepository->enregistrerReservation($dto);
+            $reservation = new Reservation();
+            $reservation->salle_id = $dto->salleId;
+            $reservation->nom_client = $dto->responsable;
+            $reservation->email = $dto->email;
+            $reservation->motif = $dto->motif;
+            $reservation->date_debut = $dto->dateDebut;
+            $reservation->date_fin = $dto->dateFin;
+
+            return $this->reservationRepository->enregistrerReservation($reservation);
         }
 
         private function validerExistenceEtStatutSalle(?Salle $salle, int $salleId): void
@@ -46,24 +53,21 @@ declare(strict_types=1);
             }
         }
 
-
-        private function validerDateDebutFuture(DateTimeImmutable $debut): void
+        private function validerDateDebutFuture(\DateTimeImmutable $debut): void
         {
-            if ($debut <= new DateTimeImmutable()) {
+            if ($debut <= new \DateTimeImmutable()) {
                 throw new RegleMetierException("La date de début doit être dans le futur.");
             }
         }
 
-
-        private function validerChronologieDates(DateTimeImmutable $debut, DateTimeImmutable $fin): void
+        private function validerChronologieDates(\DateTimeImmutable $debut, \DateTimeImmutable $fin): void
         {
             if ($debut >= $fin) {
                 throw new RegleMetierException("La date de début doit précéder la date de fin.");
             }
         }
 
-
-        private function validerDureeMaximales(DateTimeImmutable $debut, DateTimeImmutable $fin): void
+        private function validerDureeMaximales(\DateTimeImmutable $debut, \DateTimeImmutable $fin): void
         {
             $dureeEnHeures = ($fin->getTimestamp() - $debut->getTimestamp()) / 3600;
 
@@ -72,12 +76,12 @@ declare(strict_types=1);
             }
         }
 
-        private function verifierAbsenceDeConflit(CreerReservationDTO $dto): void
+        private function verifierAbsenceDeConflit(int $salleId, \DateTimeImmutable $debut, \DateTimeImmutable $fin): void
         {
             $conflit = $this->reservationRepository->rechercherConflit(
-                $dto->salleId,
-                $dto->dateDebut,
-                $dto->dateFin
+                $salleId,
+                $debut,
+                $fin
             );
 
             if ($conflit !== null) {

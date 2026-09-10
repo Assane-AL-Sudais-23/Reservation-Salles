@@ -14,26 +14,4 @@ declare(strict_types=1);
         ) {
         }
 
-
-        public static function fromArray(array $data): self
-        {
-            return new self(
-                nom: (string) $data['nom'],
-                batiment: (string) $data['batiment'],
-                capacite: (int) $data['capacite'],
-                type: (string) $data['type'],
-                active: isset($data['active']) ? (bool) $data['active'] : true
-            );
-        }
-
-        public function toArray(): array
-        {
-            return [
-                'nom' => $this->nom,
-                'batiment' => $this->batiment,
-                'capacite' => $this->capacite,
-                'type' => $this->type,
-                'active' => $this->active,
-            ];
-        }
     }

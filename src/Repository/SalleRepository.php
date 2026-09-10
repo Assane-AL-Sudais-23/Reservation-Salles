@@ -4,7 +4,6 @@
     namespace App\Repository;
 
     use App\Model\Salle;
-    use App\DTO\CreerSalleDTO;
     use App\Repository\SalleRepositoryInterface;
     use Illuminate\Database\Eloquent\Collection;
 
@@ -20,8 +19,8 @@
             return Salle::find($id);
         }
 
-        public function enregistrerSalle(CreerSalleDTO $dto): Salle
+        public function enregistrerSalle(Salle $salle): Salle
         {
-            return Salle::create($dto->toArray());
+            return Salle::create($salle->build());
         }
     }

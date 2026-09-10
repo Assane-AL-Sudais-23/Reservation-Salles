@@ -4,7 +4,6 @@
     namespace App\Repository;
 
     use App\Model\Reservation;
-    use App\DTO\CreerReservationDTO;
     use Illuminate\Database\Eloquent\Collection;
     use DateTimeInterface;
 
@@ -24,7 +23,7 @@
             ?int $reservationIdAExclure = null
         ): ?Reservation;
 
-        public function enregistrerReservation(CreerReservationDTO $dto): Reservation;
+        public function enregistrerReservation(Reservation $dto): Reservation;
 
         public function annulerReservation(int $id): bool;
     }

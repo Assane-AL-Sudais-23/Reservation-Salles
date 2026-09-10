@@ -1,33 +1,38 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
     namespace App\Controller;
 
     use App\DTO\CreerSalleDTOBuilder;
-    use App\Repository\SalleRepositoryInterface;
+    use App\Service\ConsulterSalleService;
+    use App\Service\CreerSalleService;
+    use App\Service\ListerSallesService;
     use App\Validator\SalleValidator;
     use App\View\View;
 
     final class SalleController
     {
         public function __construct(
-            private readonly SalleRepositoryInterface $salleRepository,
-            private readonly SalleValidator $salleValidator
+            private readonly SalleValidator $salleValidator,
+            private readonly CreerSalleService $creerSalleService,
+            private readonly ListerSallesService $listerSallesService,
+            private readonly ConsulterSalleService $consulterSalleService
         ) {
         }
 
         public function index(): void
         {
-            $salles = $this->salleRepository->listerSalles();
+            $salles = $this->listerSallesService->executer();
+
             View::render('salle/index', ['salles' => $salles]);
         }
 
         public function show(array $vars): void
         {
-            $id = (int)$vars['id'];
-            $salle = $this->salleRepository->retrouverSalleParId($id);
+            $id = (int) $vars['id'];
+            $salle = $this->consulterSalleService->executer($id);
 
-            if (!$salle) {
+            if ($salle === null) {
                 http_response_code(404);
                 View::render('error/404');
                 return;
@@ -44,21 +49,22 @@ declare(strict_types=1);
         public function store(): void
         {
             $data = $_POST;
-            $validation = $this->salleValidator->validate($data);
+            
+            $errors = $this->salleValidator->validate($data);
 
-            if (!$validation->isValid()) {
+            if (!empty($errors)) {
                 View::render('salle/form', [
-                    'errors' => $validation->errors(),
+                    'errors' => $errors,
                     'old' => $data
                 ]);
                 return;
             }
 
             $dto = (new CreerSalleDTOBuilder())
-                ->fromArray($validation->data())
+                ->fromArray($data)
                 ->build();
 
-            $this->salleRepository->enregistrerSalle($dto);
+            $this->creerSalleService->executer($dto);
 
             header('Location: /salles');
             exit;
@@ -66,10 +72,10 @@ declare(strict_types=1);
 
         public function edit(array $vars): void
         {
-            $id = (int)$vars['id'];
-            $salle = $this->salleRepository->retrouverSalleParId($id);
+            $id = (int) $vars['id'];
+            $salle = $this->consulterSalleService->executer($id);
 
-            if (!$salle) {
+            if ($salle === null) {
                 http_response_code(404);
                 View::render('error/404');
                 return;
@@ -78,7 +84,7 @@ declare(strict_types=1);
             View::render('salle/form', [
                 'salle' => $salle,
                 'errors' => [],
-                'old' => $salle->toArray()
+                'old' => $salle
             ]);
         }
 

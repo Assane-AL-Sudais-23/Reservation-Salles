@@ -1,12 +1,11 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
     namespace App\DTO;
 
     use DateTimeImmutable;
-    use InvalidArgumentException;
 
-    final class CreerReservationDTOBuilder
+    class CreerReservationDTOBuilder
     {
         private int $salleId = 0;
         private string $responsable = '';
@@ -15,77 +14,69 @@ declare(strict_types=1);
         private ?DateTimeImmutable $dateDebut = null;
         private ?DateTimeImmutable $dateFin = null;
 
-        public function withSalleId(int $salleId): self
+        public function fromArray(array $data): self
+        {
+            $this->salleId = (int)($data['salle_id'] ?? 0);
+            $this->responsable = (string)($data['responsable'] ?? '');
+            $this->email = (string)($data['email'] ?? '');
+            $this->motif = (string)($data['motif'] ?? '');
+            
+            if (!empty($data['date_debut'])) {
+                $this->dateDebut = new DateTimeImmutable((string)$data['date_debut']);
+            }
+            
+            if (!empty($data['date_fin'])) {
+                $this->dateFin = new DateTimeImmutable((string)$data['date_fin']);
+            }
+
+            return $this;
+        }
+
+        public function setSalleId(int $salleId): self
         {
             $this->salleId = $salleId;
             return $this;
         }
 
-        public function withResponsable(string $responsable): self
+        public function setResponsable(string $responsable): self
         {
-            $this->responsable = trim($responsable);
+            $this->responsable = $responsable;
             return $this;
         }
 
-        public function withEmail(string $email): self
+        public function setEmail(string $email): self
         {
-            $this->email = trim($email);
+            $this->email = $email;
             return $this;
         }
 
-        public function withMotif(string $motif): self
+        public function setMotif(string $motif): self
         {
-            $this->motif = trim($motif);
+            $this->motif = $motif;
             return $this;
         }
 
-        public function withDateDebut(DateTimeImmutable|string $dateDebut): self
+        public function setDateDebut(DateTimeImmutable $dateDebut): self
         {
-            $this->dateDebut = is_string($dateDebut) 
-                ? new DateTimeImmutable($dateDebut) 
-                : $dateDebut;
-
+            $this->dateDebut = $dateDebut;
             return $this;
         }
 
-        public function withDateFin(DateTimeImmutable|string $dateFin): self
+        public function setDateFin(DateTimeImmutable $dateFin): self
         {
-            $this->dateFin = is_string($dateFin) 
-                ? new DateTimeImmutable($dateFin) 
-                : $dateFin;
-
-            return $this;
-        }
-
-        public function fromArray(array $data): self
-        {
-            $this->salleId = (int)($data['salle_id'] ?? 0);
-            $this->responsable = trim((string)($data['responsable'] ?? ''));
-            $this->email = trim((string)($data['email'] ?? ''));
-            $this->motif = trim((string)($data['motif'] ?? ''));
-
-            $debutRaw = (string)($data['date_debut'] ?? 'now');
-            $finRaw = (string)($data['date_fin'] ?? 'now');
-
-            $this->dateDebut = new DateTimeImmutable($debutRaw);
-            $this->dateFin = new DateTimeImmutable($finRaw);
-
+            $this->dateFin = $dateFin;
             return $this;
         }
 
         public function build(): CreerReservationDTO
         {
-            if ($this->dateDebut === null || $this->dateFin === null) {
-                throw new InvalidArgumentException("Les dates de début et de fin doivent être définies.");
-            }
-
             return new CreerReservationDTO(
                 salleId: $this->salleId,
                 responsable: $this->responsable,
                 email: $this->email,
                 motif: $this->motif,
-                dateDebut: $this->dateDebut,
-                dateFin: $this->dateFin
+                dateDebut: $this->dateDebut ?? new DateTimeImmutable(),
+                dateFin: $this->dateFin ?? new DateTimeImmutable()
             );
         }
     }

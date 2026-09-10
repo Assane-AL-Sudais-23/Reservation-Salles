@@ -1,11 +1,9 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
     namespace App\Repository;
 
     use App\Model\Reservation;
-    use App\DTO\CreerReservationDTO;
-    use App\Repository\ReservationRepositoryInterface;
     use Illuminate\Database\Eloquent\Collection;
 
     class ReservationRepository implements ReservationRepositoryInterface
@@ -41,16 +39,18 @@ declare(strict_types=1);
             return $query->first();
         }
 
-        public function enregistrerReservation(CreerReservationDTO $dto): Reservation
+        public function enregistrerReservation(Reservation $reservation): Reservation
         {
-            return Reservation::create($dto->toArray());
+            $reservation->save();
+
+            return $reservation;
         }
 
         public function annulerReservation(int $id): bool
         {
             $reservation = $this->retrouverReservationParId($id);
 
-            if (!$reservation) {
+            if ($reservation === null) {
                 return false;
             }
 

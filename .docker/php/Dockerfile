@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libpq-dev \
     && docker-php-ext-install pdo pdo_mysql
-
+    
 # Récupération de l'exécutable Composer depuis l'image officielle
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
