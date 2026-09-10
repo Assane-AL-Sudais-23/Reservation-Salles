@@ -4,17 +4,17 @@
 
     namespace App\Controller;
 
+    use App\DTO\CreerReservationDTOBuilder;
+    use App\Exception\RegleMetierException;
+    use App\Exception\SalleIndisponibleException;
     use App\Repository\ReservationRepositoryInterface;
     use App\Repository\SalleRepositoryInterface;
-    use App\Validator\ReservationValidator;
-    use App\Service\CreerReservationService;
     use App\Service\AnnulerReservationService;
-    use App\DTO\CreerReservationDTO;
-    use App\Exception\SalleIndisponibleException;
-    use App\Exception\RegleMetierException;
+    use App\Service\CreerReservationService;
+    use App\Validator\ReservationValidator;
     use App\View\View;
 
-    class ReservationController
+    final class ReservationController
     {
         public function __construct(
             private readonly ReservationRepositoryInterface $reservationRepository,
@@ -33,18 +33,26 @@
 
         public function show(array $vars): void
         {
-            $reservation = $this->reservationRepository->retrouverReservationParId((int) $vars['id']);
+            $id = (int)$vars['id'];
+            $reservation = $this->reservationRepository->retrouverReservationParId($id);
+
             if (!$reservation) {
+                http_response_code(404);
                 View::render('error/404');
                 return;
             }
+
             View::render('reservation/show', ['reservation' => $reservation]);
         }
 
         public function create(): void
         {
             $salles = $this->salleRepository->listerSalles();
-            View::render('reservation/form', ['salles' => $salles, 'errors' => [], 'old' => []]);
+            View::render('reservation/form', [
+                'salles' => $salles,
+                'errors' => [],
+                'old' => []
+            ]);
         }
 
         public function store(): void
@@ -63,7 +71,10 @@
             }
 
             try {
-                $dto = CreerReservationDTO::fromArray($validation->data());
+                $dto = (new CreerReservationDTOBuilder())
+                    ->fromArray($validation->data())
+                    ->build();
+
                 $this->creerReservationService->executer($dto);
 
                 header('Location: /reservations');
@@ -80,7 +91,9 @@
 
         public function cancel(array $vars): void
         {
-            $this->annulerReservationService->executer((int) $vars['id']);
+            $id = (int)$vars['id'];
+            $this->annulerReservationService->executer($id);
+
             header('Location: /reservations');
             exit;
         }

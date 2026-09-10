@@ -5,11 +5,13 @@
     namespace App\Service;
 
     use App\DTO\CreerReservationDTO;
-    use App\Model\Reservation;
-    use App\Repository\SalleRepositoryInterface;
-    use App\Repository\ReservationRepositoryInterface;
-    use App\Exception\SalleIndisponibleException;
     use App\Exception\RegleMetierException;
+    use App\Exception\SalleIndisponibleException;
+    use App\Model\Reservation;
+    use App\Model\Salle;
+    use App\Repository\ReservationRepositoryInterface;
+    use App\Repository\SalleRepositoryInterface;
+    use DateTimeImmutable;
 
     class CreerReservationService
     {
@@ -24,38 +26,52 @@
         public function executer(CreerReservationDTO $dto): Reservation
         {
             $salle = $this->salleRepository->retrouverSalleParId($dto->salleId);
-            
-            $this->salleDoitExisterEtEtreActive($salle, $dto->salleId);
-            $this->validerReglesHoraires($dto->dateDebut, $dto->dateFin);
+
+            $this->validerExistenceEtStatutSalle($salle, $dto->salleId);
+            $this->validerDateDebutFuture($dto->dateDebut);
+            $this->validerChronologieDates($dto->dateDebut, $dto->dateFin);
+            $this->validerDureeMaximales($dto->dateDebut, $dto->dateFin);
             $this->verifierAbsenceDeConflit($dto);
 
             return $this->reservationRepository->enregistrerReservation($dto);
         }
 
-
-        private function salleDoitExisterEtEtreActive(?object $salle, int $salleId): void
+        private function validerExistenceEtStatutSalle(?Salle $salle, int $salleId): void
         {
-            match (true) {
-                $salle === null => throw new SalleIndisponibleException("La salle ID {$salleId} n'existe pas."),
-                isset($salle->active) && !$salle->active => throw new SalleIndisponibleException("La salle '{$salle->nom}' est désactivée."),
-                default => null,
-            };
+            if ($salle === null) {
+                throw new SalleIndisponibleException("La salle ID {$salleId} n'existe pas.");
+            }
+
+            if (isset($salle->active) && !$salle->active) {
+                throw new SalleIndisponibleException("La salle '{$salle->nom}' est désactivée.");
+            }
         }
 
-    
-        private function validerReglesHoraires(\DateTimeImmutable $debut, \DateTimeImmutable $fin): void
+
+        private function validerDateDebutFuture(DateTimeImmutable $debut): void
         {
-            $maintenant = new \DateTimeImmutable();
+            if ($debut <= new DateTimeImmutable()) {
+                throw new RegleMetierException("La date de début doit être dans le futur.");
+            }
+        }
+
+
+        private function validerChronologieDates(DateTimeImmutable $debut, DateTimeImmutable $fin): void
+        {
+            if ($debut >= $fin) {
+                throw new RegleMetierException("La date de début doit précéder la date de fin.");
+            }
+        }
+
+
+        private function validerDureeMaximales(DateTimeImmutable $debut, DateTimeImmutable $fin): void
+        {
             $dureeEnHeures = ($fin->getTimestamp() - $debut->getTimestamp()) / 3600;
 
-            match (true) {
-                $debut <= $maintenant => throw new RegleMetierException("La date de début doit être dans le futur."),
-                $debut >= $fin => throw new RegleMetierException("La date de début doit précéder la date de fin."),
-                $dureeEnHeures > self::DUREE_MAX_HEURES => throw new RegleMetierException("La durée ne peut dépasser " . self::DUREE_MAX_HEURES . "h."),
-                default => null,
-            };
+            if ($dureeEnHeures > self::DUREE_MAX_HEURES) {
+                throw new RegleMetierException("La durée ne peut dépasser " . self::DUREE_MAX_HEURES . " heures.");
+            }
         }
-
 
         private function verifierAbsenceDeConflit(CreerReservationDTO $dto): void
         {

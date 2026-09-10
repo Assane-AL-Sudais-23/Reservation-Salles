@@ -4,12 +4,12 @@
 
     namespace App\Controller;
 
+    use App\DTO\CreerSalleDTOBuilder;
     use App\Repository\SalleRepositoryInterface;
     use App\Validator\SalleValidator;
-    use App\DTO\CreerSalleDTO;
     use App\View\View;
 
-    class SalleController
+    final class SalleController
     {
         public function __construct(
             private readonly SalleRepositoryInterface $salleRepository,
@@ -25,11 +25,15 @@
 
         public function show(array $vars): void
         {
-            $salle = $this->salleRepository->retrouverSalleParId((int) $vars['id']);
+            $id = (int)$vars['id'];
+            $salle = $this->salleRepository->retrouverSalleParId($id);
+
             if (!$salle) {
+                http_response_code(404);
                 View::render('error/404');
                 return;
             }
+
             View::render('salle/show', ['salle' => $salle]);
         }
 
@@ -51,7 +55,10 @@
                 return;
             }
 
-            $dto = CreerSalleDTO::fromArray($validation->data());
+            $dto = (new CreerSalleDTOBuilder())
+                ->fromArray($validation->data())
+                ->build();
+
             $this->salleRepository->enregistrerSalle($dto);
 
             header('Location: /salles');
@@ -60,12 +67,23 @@
 
         public function edit(array $vars): void
         {
-            $salle = $this->salleRepository->retrouverSalleParId((int) $vars['id']);
-            View::render('salle/form', ['salle' => $salle, 'errors' => [], 'old' => $salle->toArray()]);
+            $id = (int)$vars['id'];
+            $salle = $this->salleRepository->retrouverSalleParId($id);
+
+            if (!$salle) {
+                http_response_code(404);
+                View::render('error/404');
+                return;
+            }
+
+            View::render('salle/form', [
+                'salle' => $salle,
+                'errors' => [],
+                'old' => $salle->toArray()
+            ]);
         }
 
         public function update(array $vars): void
         {
-            
         }
     }
