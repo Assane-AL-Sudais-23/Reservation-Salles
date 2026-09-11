@@ -1,27 +1,53 @@
-<?php
+<?php 
     declare(strict_types=1);
 
     namespace App\Service;
 
+    use App\Repository\ReservationRepositoryInterface;
+    use App\Exception\ReservationIntrouvableException;
+    use App\Model\Reservation;
     use App\DTO\CreerReservationDTO;
     use App\Exception\RegleMetierException;
-    use App\Exception\SalleIndisponibleException;
-    use App\Model\Reservation;
-    use App\Model\Salle;
-    use App\Repository\ReservationRepositoryInterface;
     use App\Repository\SalleRepositoryInterface;
+    use Illuminate\Database\Eloquent\Collection;
+    use App\Exception\SalleIndisponibleException;
+    use App\Model\Salle;
 
-    class CreerReservationService
-    {
+
+    class ReservationService {
+
         private const DUREE_MAX_HEURES = 4;
 
         public function __construct(
-            private readonly SalleRepositoryInterface $salleRepository,
-            private readonly ReservationRepositoryInterface $reservationRepository
-        ) {
+            private readonly ReservationRepositoryInterface $reservationRepository,
+            private readonly SalleRepositoryInterface $salleRepository
+
+        ){}
+
+        public function annulerReservation(int $reservationId): bool
+        {
+            $reservation = $this->reservationRepository->retrouverReservationParId($reservationId);
+
+            if (!$reservation) {
+                throw new ReservationIntrouvableException("La réservation #{$reservationId} est introuvable.");
+            }
+
+            return $this->reservationRepository->annulerReservation($reservationId);
         }
 
-        public function executer(CreerReservationDTO $dto): Reservation
+        public function listerReservation(): Collection {
+            return $this->reservationRepository->listerReservations();
+        }
+
+        public function retrouverReservation(int $id): ?Reservation {
+            return $this->reservationRepository->retrouverReservationParId($id);
+        }
+
+        public function listerSalles(): Collection {
+            return $this->salleRepository->listerSalles();
+        }
+
+        public function enregistrerReservation(CreerReservationDTO $dto): Reservation
         {
             $salle = $this->salleRepository->retrouverSalleParId($dto->salleId);
 

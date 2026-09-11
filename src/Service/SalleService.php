@@ -1,20 +1,32 @@
-<?php
+<?php 
     declare(strict_types=1);
 
     namespace App\Service;
 
-    use App\DTO\CreerSalleDTO;
     use App\Model\Salle;
+    use App\DTO\CreerSalleDTO;
+    use Illuminate\Database\Eloquent\Collection;
     use App\Repository\SalleRepositoryInterface;
 
-    final class CreerSalleService
-    {
+
+    class SalleService {
+
         public function __construct(
             private readonly SalleRepositoryInterface $salleRepository
         ) {
         }
 
-        public function executer(CreerSalleDTO $dto): Salle
+        public function retrouverSalle(int $id): ?Salle
+        {
+            return $this->salleRepository->retrouverSalleParId($id);
+        }
+
+        public function listeSalles(): Collection
+        {
+            return $this->salleRepository->listerSalles();
+        }
+
+        public function enregistrerSalle(CreerSalleDTO $dto): Salle
         {
             $salle = new Salle();
 

@@ -5,14 +5,12 @@ declare(strict_types=1);
 
     use App\View\View;
     use FastRoute\Dispatcher;
-    use Illuminate\Database\Capsule\Manager as Capsule;
     use Invoker\InvokerInterface;
 
     final class Application
     {
         public function __construct(
             private readonly Dispatcher $dispatcher,
-            private readonly Capsule $capsule,
             private readonly InvokerInterface $invoker
         ) {
         }

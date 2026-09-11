@@ -29,7 +29,7 @@ class ReservationValidator implements ValidatorInterface
             }
         }
 
-        $isValid = count($errors) === 0;
+        $isValid = empty($errors);
 
         return new ValidationResult(
             isValid: $isValid,

@@ -31,7 +31,7 @@ declare(strict_types=1);
                 }
             }
 
-            $isValid = count($errors) === 0;
+            $isValid = empty($errors);
 
             return new ValidationResult(
                 isValid: $isValid,

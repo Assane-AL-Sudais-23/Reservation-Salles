@@ -13,8 +13,8 @@
     use App\Repository\ReservationRepositoryInterface;
     use App\Repository\ReservationRepository;
 
-    use App\Service\CreerReservationService;
-    use App\Service\AnnulerReservationService;
+    use App\Service\SalleService;
+    use App\Service\ReservationService;
     use App\Validator\SalleValidator;
     use App\Validator\ReservationValidator;
 
@@ -37,8 +37,8 @@
 
         SalleValidator::class => autowire(SalleValidator::class),
         ReservationValidator::class => autowire(ReservationValidator::class),
-        CreerReservationService::class => autowire(CreerReservationService::class),
-        AnnulerReservationService::class => autowire(AnnulerReservationService::class),
+        SalleService::class => autowire(SalleService::class),
+        ReservationService::class => autowire(ReservationService::class),
 
         SalleController::class => autowire(SalleController::class),
         ReservationController::class => autowire(ReservationController::class),

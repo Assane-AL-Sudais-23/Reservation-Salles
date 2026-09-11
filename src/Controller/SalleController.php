@@ -4,91 +4,77 @@
     namespace App\Controller;
 
     use App\DTO\CreerSalleDTOBuilder;
-    use App\Service\ConsulterSalleService;
-    use App\Service\CreerSalleService;
-    use App\Service\ListerSallesService;
+    use App\Service\SalleService;
     use App\Validator\SalleValidator;
-    use App\View\View;
 
-    final class SalleController
+    final class SalleController extends AbstractController
     {
         public function __construct(
-            private readonly SalleValidator $salleValidator,
-            private readonly CreerSalleService $creerSalleService,
-            private readonly ListerSallesService $listerSallesService,
-            private readonly ConsulterSalleService $consulterSalleService
+            private readonly SalleService $salleService,
+            private readonly SalleValidator $salleValidator
         ) {
         }
 
         public function index(): void
         {
-            $salles = $this->listerSallesService->executer();
-
-            View::render('salle/index', ['salles' => $salles]);
+            $salles = $this->salleService->listeSalles();
+            parent::render('salles/index', ['salles' => $salles]);
         }
 
         public function show(array $vars): void
         {
-            $id = (int) $vars['id'];
-            $salle = $this->consulterSalleService->executer($id);
+            $id = (int) ($vars['id'] ?? 0);
+            $salle = $this->salleService->retrouverSalle($id);
 
             if ($salle === null) {
-                http_response_code(404);
-                View::render('error/404');
+                parent::render('errors/404', ['message' => 'Salle introuvable']);
                 return;
             }
 
-            View::render('salle/show', ['salle' => $salle]);
+            $this->render('salles/show', ['salle' => $salle]);
         }
 
         public function create(): void
         {
-            View::render('salle/form', ['errors' => [], 'old' => []]);
+            parent::render('salles/create');
         }
 
         public function store(): void
         {
             $data = $_POST;
-            
-            $errors = $this->salleValidator->validate($data);
+            $erreurs = $this->salleValidator->validate($data);
 
-            if (!empty($errors)) {
-                View::render('salle/form', [
-                    'errors' => $errors,
-                    'old' => $data
+            if (!empty($erreurs)) {
+                $this->render('salles/create', [
+                    'erreurs' => $erreurs,
+                    'champs' => $data
                 ]);
                 return;
             }
 
-            $dto = (new CreerSalleDTOBuilder())
-                ->fromArray($data)
-                ->build();
+            $dto = (new CreerSalleDTOBuilder())->fromArray($data)->build();
+            $this->salleService->enregistrerSalle($dto);
 
-            $this->creerSalleService->executer($dto);
-
-            header('Location: /salles');
-            exit;
+            $this->redirect('/salles');
         }
 
         public function edit(array $vars): void
         {
-            $id = (int) $vars['id'];
-            $salle = $this->consulterSalleService->executer($id);
+            $id = (int) ($vars['id'] ?? 0);
+            $salle = $this->salleService->retrouverSalle($id);
 
             if ($salle === null) {
-                http_response_code(404);
-                View::render('error/404');
+                $this->render('errors/404', ['message' => 'Salle introuvable']);
                 return;
             }
 
-            View::render('salle/form', [
-                'salle' => $salle,
-                'errors' => [],
-                'old' => $salle
-            ]);
+            parent::render('salles/edit', ['salle' => $salle]);
         }
 
         public function update(array $vars): void
         {
+            $id = (int) ($vars['id'] ?? 0);
+            $data = $_POST;
+            $this->redirect('/salles/' . $id);
         }
     }

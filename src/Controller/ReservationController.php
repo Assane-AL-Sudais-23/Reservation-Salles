@@ -6,48 +6,42 @@ declare(strict_types=1);
     use App\DTO\CreerReservationDTOBuilder;
     use App\Exception\RegleMetierException;
     use App\Exception\SalleIndisponibleException;
-    use App\Repository\ReservationRepositoryInterface;
-    use App\Repository\SalleRepositoryInterface;
-    use App\Service\AnnulerReservationService;
-    use App\Service\CreerReservationService;
+    use App\Service\ReservationService;
     use App\Validator\ReservationValidator;
-    use App\View\View;
+    use App\Controller\AbstractController;
 
-    final class ReservationController
+    final class ReservationController extends AbstractController
     {
         public function __construct(
-            private readonly ReservationRepositoryInterface $reservationRepository,
-            private readonly SalleRepositoryInterface $salleRepository,
-            private readonly ReservationValidator $reservationValidator,
-            private readonly CreerReservationService $creerReservationService,
-            private readonly AnnulerReservationService $annulerReservationService
+            private readonly ReservationService $reservationService,
+            private readonly ReservationValidator $reservationValidator
         ) {
         }
 
         public function index(): void
         {
-            $reservations = $this->reservationRepository->listerReservations();
-            View::render('reservation/index', ['reservations' => $reservations]);
+            $reservations = $this->reservationService->listerReservation();
+            parent::render('reservation/index', ['reservations' => $reservations]);
         }
 
         public function show(array $vars): void
         {
             $id = (int)$vars['id'];
-            $reservation = $this->reservationRepository->retrouverReservationParId($id);
+            $reservation = $this->reservationService->retrouverReservation($id);
 
             if (!$reservation) {
                 http_response_code(404);
-                View::render('error/404');
+                parent::render('error/404');
                 return;
             }
 
-            View::render('reservation/show', ['reservation' => $reservation]);
+            parent::render('reservation/show', ['reservation' => $reservation]);
         }
 
         public function create(): void
         {
-            $salles = $this->salleRepository->listerSalles();
-            View::render('reservation/form', [
+            $salles = $this->reservationService->listerSalles();
+            parent::render('reservation/form', [
                 'salles' => $salles,
                 'errors' => [],
                 'old' => []
@@ -60,8 +54,8 @@ declare(strict_types=1);
             $validation = $this->reservationValidator->validate($data);
 
             if (!$validation->isValid()) {
-                $salles = $this->salleRepository->listerSalles();
-                View::render('reservation/form', [
+                $salles = $this->reservationService->listerSalles();
+                parent::render('reservation/form', [
                     'salles' => $salles,
                     'errors' => $validation->errors(),
                     'old' => $data
@@ -74,13 +68,13 @@ declare(strict_types=1);
                     ->fromArray($validation->data())
                     ->build();
 
-                $this->creerReservationService->executer($dto);
+                $this->reservationService->enregistrerReservation($dto);
 
                 header('Location: /reservations');
                 exit;
             } catch (SalleIndisponibleException | RegleMetierException $e) {
-                $salles = $this->salleRepository->listerSalles();
-                View::render('reservation/form', [
+                $salles = $this->reservationService->listerSalles();
+                parent::render('reservation/form', [
                     'salles' => $salles,
                     'errors' => ['global' => $e->getMessage()],
                     'old' => $data
@@ -91,7 +85,7 @@ declare(strict_types=1);
         public function cancel(array $vars): void
         {
             $id = (int)$vars['id'];
-            $this->annulerReservationService->executer($id);
+            $this->reservationService->annulerReservation($id);
 
             header('Location: /reservations');
             exit;
