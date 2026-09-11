@@ -23,4 +23,5 @@
         {
             return Salle::create($salle->build());
         }
+
     }

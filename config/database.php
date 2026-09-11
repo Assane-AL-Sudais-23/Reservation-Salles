@@ -1,25 +1,23 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
     use Illuminate\Database\Capsule\Manager as Capsule;
 
     $capsule = new Capsule();
 
     $capsule->addConnection([
-        'driver'    => $_ENV['DB_DRIVER'] ?? 'pgsql',
-        'host'      => $_ENV['DB_HOST'] ?? '127.0.0.1',
-        'port'      => $_ENV['DB_PORT'] ?? '5432',
-        'database'  => $_ENV['DB_DATABASE'] ?? 'store_manager_pro',
-        'username'  => $_ENV['DB_USERNAME'] ?? 'postgres',
-        'password'  => $_ENV['DB_PASSWORD'] ?? 'postgres',
-        'charset'   => 'utf8',
+        'driver'    => $_ENV['DB_DRIVER'] ?? 'mysql',
+        'host'      => $_ENV['DB_HOST'] ?? 'db',
+        'port'      => (int)($_ENV['DB_PORT'] ?? 3306),
+        'database'  => $_ENV['DB_DATABASE'] ?? 'reservation_salles',
+        'username'  => $_ENV['DB_USERNAME'] ?? 'root',
+        'password'  => $_ENV['DB_PASSWORD'] ?? 'sudais23',
+        'charset'   => 'utf8mb4',
+        'collation' => 'utf8mb4_unicode_ci',
         'prefix'    => '',
-        'schema'    => 'public',
-        'sslmode'   => 'prefer',
     ]);
 
     $capsule->setAsGlobal();
-
     $capsule->bootEloquent();
 
     return $capsule;

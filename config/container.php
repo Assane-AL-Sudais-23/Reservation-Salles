@@ -22,10 +22,10 @@
     use App\Controller\ReservationController;
     use App\Application;
 
+    $capsule = require __DIR__ . '/database.php';
+
     return [
-        Capsule::class => factory(function () {
-            return require __DIR__ . '/database.php';
-        }),
+        Capsule::class => $capsule,
 
         Dispatcher::class => factory(function (): Dispatcher {
             $routesDefiner = require dirname(__DIR__) . '/routes/web.php';

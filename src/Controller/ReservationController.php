@@ -70,7 +70,7 @@ declare(strict_types=1);
 
                 $this->reservationService->enregistrerReservation($dto);
 
-                header('Location: /reservations');
+                header('Location: /reservation');
                 exit;
             } catch (SalleIndisponibleException | RegleMetierException $e) {
                 $salles = $this->reservationService->listerSalles();
@@ -87,7 +87,14 @@ declare(strict_types=1);
             $id = (int)$vars['id'];
             $this->reservationService->annulerReservation($id);
 
-            header('Location: /reservations');
+            header('Location: /reservation');
             exit;
+        }
+
+        public function update(array $vars): void {
+            $id = (int) ($vars['id'] ?? 0);
+            $data = $_POST;
+
+            $this->redirect('/reservation/' . $id);
         }
     }

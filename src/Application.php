@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
     namespace App;
 
@@ -43,7 +43,12 @@ declare(strict_types=1);
                 case Dispatcher::FOUND:
                     $handler = $routeInfo[1];
                     $vars = $routeInfo[2];
-                    $this->invoker->call($handler, ['vars' => $vars]);
+
+                    $this->invoker->call($handler, [
+                        'params' => $vars,
+                        'vars'   => $vars,
+                        ...$vars
+                    ]);
                     break;
             }
         }

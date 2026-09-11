@@ -5,8 +5,10 @@
 
     use App\Model\Salle;
     use App\DTO\CreerSalleDTO;
-    use Illuminate\Database\Eloquent\Collection;
+    use Illuminate\Support\Collection;
     use App\Repository\SalleRepositoryInterface;
+    use  App\DTO\SalleDTOBuilder;
+    use App\DTO\SalleViewDTO;
 
 
     class SalleService {
@@ -23,7 +25,8 @@
 
         public function listeSalles(): Collection
         {
-            return $this->salleRepository->listerSalles();
+            $sallesEntites = $this->salleRepository->listerSalles();
+            return SalleDTOBuilder::fromEntities($sallesEntites);
         }
 
         public function enregistrerSalle(CreerSalleDTO $dto): Salle

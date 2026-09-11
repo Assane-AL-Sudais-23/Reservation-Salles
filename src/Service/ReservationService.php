@@ -7,9 +7,10 @@
     use App\Exception\ReservationIntrouvableException;
     use App\Model\Reservation;
     use App\DTO\CreerReservationDTO;
+    use App\DTO\ReservationDTOBuilder;
     use App\Exception\RegleMetierException;
     use App\Repository\SalleRepositoryInterface;
-    use Illuminate\Database\Eloquent\Collection;
+    use Illuminate\Support\Collection;
     use App\Exception\SalleIndisponibleException;
     use App\Model\Salle;
 
@@ -36,7 +37,8 @@
         }
 
         public function listerReservation(): Collection {
-            return $this->reservationRepository->listerReservations();
+            $reservationEntities = $this->reservationRepository->listerReservations();
+            return ReservationDTOBuilder::fromEntities($reservationEntities);
         }
 
         public function retrouverReservation(int $id): ?Reservation {
