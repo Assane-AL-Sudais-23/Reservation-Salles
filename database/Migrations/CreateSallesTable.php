@@ -12,12 +12,18 @@ namespace Database\Migrations;
                 Capsule::schema()->create('salles', function ($table) {
                     $table->increments('id');
                     $table->string('nom');
+                    $table->string('batiment');
                     $table->integer('capacite');
                     $table->enum('type', ['amphi', 'tp', 'reunion', 'standard'])->default('standard');
                     $table->boolean('active')->default(true);
                     $table->timestamps();
                 });
                 echo "Table 'salles' créée.\n";
+            } elseif (!Capsule::schema()->hasColumn('salles', 'batiment')) {
+                Capsule::schema()->table('salles', function ($table) {
+                    $table->string('batiment')->after('nom');
+                });
+                echo "Colonne 'batiment' ajoutée à la table 'salles'.\n";
             }
         }
 
