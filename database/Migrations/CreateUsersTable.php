@@ -18,6 +18,9 @@ namespace Database\Migrations;
                     $table->timestamps();
                 });
                 echo "Table 'users' créée.\n";
+            } elseif (Capsule::schema()->hasColumn('users', 'role')) {
+                Capsule::statement("ALTER TABLE `users` MODIFY `role` ENUM('admin', 'responsable') NOT NULL DEFAULT 'responsable'");
+                echo "Colonne 'role' mise à jour dans la table 'users'.\n";
             }
         }
 
