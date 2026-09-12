@@ -5,7 +5,7 @@
         <h2 style="margin: 0; font-size: 1.5rem; color: #111827;">Liste des Réservations</h2>
         <p style="margin: 0.25rem 0 0 0; color: #6b7280; font-size: 0.875rem;">Affichez et gérez l'ensemble des réservations enregistrées.</p>
     </div>
-    <?php if ($utilisateurConnecte->role === \App\Security\Role::RESPONSABLE): ?>
+    <?php if ($utilisateurConnecte?->role === \App\Security\Role::RESPONSABLE): ?>
         <a href="/reservation/create" style="text-decoration: none; font-weight: 600; color: #ffffff; background-color: #2563eb; padding: 0.625rem 1.25rem; border-radius: 6px; font-size: 0.875rem;">
             + Nouvelle Réservation
         </a>

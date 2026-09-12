@@ -5,7 +5,7 @@
         <h2 style="margin: 0; font-size: 1.5rem; color: #111827;">Liste des Salles</h2>
         <p style="margin: 0.25rem 0 0 0; color: #6b7280; font-size: 0.875rem;">Consultez et gérez les salles disponibles pour la réservation.</p>
     </div>
-    <?php if ($utilisateurConnecte->role === \App\Security\Role::ADMIN): ?>
+    <?php if ($utilisateurConnecte?->role === \App\Security\Role::ADMIN): ?>
         <a href="/salle/create" style="text-decoration: none; font-weight: 600; color: #ffffff; background-color: #2563eb; padding: 0.625rem 1.25rem; border-radius: 6px; font-size: 0.875rem;">
             + Ajouter une Salle
         </a>
@@ -56,7 +56,7 @@
                             <a href="/salle/<?= e((string)$salle->id) ?>" style="color: #2563eb; text-decoration: none; font-weight: 500; margin-right: 0.75rem;">
                                 Voir
                             </a>
-                            <?php if ($utilisateurConnecte->role === \App\Security\Role::ADMIN): ?>
+                            <?php if ($utilisateurConnecte?->role === \App\Security\Role::ADMIN): ?>
                                 <!-- Aligné sur la route GET /salle/{id}/edit du routeur -->
                                 <a href="/salle/<?= e((string)$salle->id) ?>/edit" style="color: #4b5563; text-decoration: none; font-weight: 500;">
                                     Éditer
