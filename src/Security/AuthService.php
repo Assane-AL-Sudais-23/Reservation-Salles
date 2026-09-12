@@ -6,7 +6,6 @@
     use App\Model\User;
     use App\Repository\UserRepositoryInterface;
 
-    
     class AuthService
     {
         public function __construct(
