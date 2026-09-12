@@ -20,12 +20,15 @@
 
     use App\Controller\SalleController;
     use App\Controller\ReservationController;
+    use App\View\View;
     use App\Application;
 
     $capsule = require __DIR__ . '/database.php';
 
     return [
         Capsule::class => $capsule,
+
+        View::class => autowire(View::class),
 
         Dispatcher::class => factory(function (): Dispatcher {
             $routesDefiner = require dirname(__DIR__) . '/routes/web.php';

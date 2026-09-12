@@ -7,15 +7,20 @@ declare(strict_types=1);
     use App\Exception\RegleMetierException;
     use App\Exception\SalleIndisponibleException;
     use App\Service\ReservationService;
+    use App\Service\SalleService;
     use App\Validator\ReservationValidator;
     use App\Controller\AbstractController;
+    use App\View\View;
 
     final class ReservationController extends AbstractController
     {
         public function __construct(
             private readonly ReservationService $reservationService,
-            private readonly ReservationValidator $reservationValidator
+            private readonly SalleService $salleService,
+            private readonly ReservationValidator $reservationValidator,
+            View $view
         ) {
+            parent::__construct($view);
         }
 
         public function index(): void
@@ -40,7 +45,7 @@ declare(strict_types=1);
 
         public function create(): void
         {
-            $salles = $this->reservationService->listerSalles();
+            $salles = $this->salleService->listeSalles();
             parent::render('reservation/form', [
                 'salles' => $salles,
                 'errors' => [],
@@ -54,7 +59,7 @@ declare(strict_types=1);
             $validation = $this->reservationValidator->validate($data);
 
             if (!$validation->isValid()) {
-                $salles = $this->reservationService->listerSalles();
+                $salles = $this->salleService->listeSalles();
                 parent::render('reservation/form', [
                     'salles' => $salles,
                     'errors' => $validation->errors(),
@@ -73,7 +78,7 @@ declare(strict_types=1);
                 header('Location: /reservation');
                 exit;
             } catch (SalleIndisponibleException | RegleMetierException $e) {
-                $salles = $this->reservationService->listerSalles();
+                $salles = $this->salleService->listeSalles();
                 parent::render('reservation/form', [
                     'salles' => $salles,
                     'errors' => ['global' => $e->getMessage()],
@@ -89,12 +94,5 @@ declare(strict_types=1);
 
             header('Location: /reservation');
             exit;
-        }
-
-        public function update(array $vars): void {
-            $id = (int) ($vars['id'] ?? 0);
-            $data = $_POST;
-
-            $this->redirect('/reservation/' . $id);
         }
     }

@@ -45,10 +45,6 @@
             return $this->reservationRepository->retrouverReservationParId($id);
         }
 
-        public function listerSalles(): Collection {
-            return $this->salleRepository->listerSalles();
-        }
-
         public function enregistrerReservation(CreerReservationDTO $dto): Reservation
         {
             $salle = $this->salleRepository->retrouverSalleParId($dto->salleId);
@@ -61,7 +57,7 @@
 
             $reservation = new Reservation();
             $reservation->salle_id = $dto->salleId;
-            $reservation->nom_client = $dto->responsable;
+            $reservation->responsable = $dto->responsable;
             $reservation->email = $dto->email;
             $reservation->motif = $dto->motif;
             $reservation->date_debut = $dto->dateDebut;

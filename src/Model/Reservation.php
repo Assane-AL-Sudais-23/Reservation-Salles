@@ -10,14 +10,17 @@ declare(strict_types=1);
     {
         protected $table = 'reservations';
 
-        protected $fillable = [
+         protected $fillable = [
             'user_id',
             'salle_id',
+            'responsable',
+            'email',
+            'motif',
             'date_debut',
             'date_fin',
             'statut',
         ];
-
+ 
         protected $casts = [
             'id' => 'integer',
             'user_id' => 'integer',

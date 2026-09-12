@@ -11,14 +11,16 @@ namespace Database\Migrations;
             if (!Capsule::schema()->hasTable('reservations')) {
                 Capsule::schema()->create('reservations', function ($table) {
                     $table->increments('id');
-                    $table->integer('user_id')->unsigned();
+                    $table->integer('user_id')->unsigned()->nullable();
                     $table->integer('salle_id')->unsigned();
+                    $table->string('responsable');
+                    $table->string('email');
+                    $table->string('motif');
                     $table->dateTime('date_debut');
                     $table->dateTime('date_fin');
                     $table->enum('statut', ['en_attente', 'confirmee', 'annulee'])->default('en_attente');
                     $table->timestamps();
-
-                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                    $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
                     $table->foreign('salle_id')->references('id')->on('salles')->onDelete('cascade');
                 });
                 echo " Table 'reservations' créée.\n";

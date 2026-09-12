@@ -11,28 +11,38 @@ namespace Database\Seeders;
             $salles = [
                 [
                     'nom' => 'Amphithéâtre A',
+                    'batiment' => 'Bâtiment Principal',
                     'capacite' => 250,
-                    'description' => 'Grand amphithéâtre pour cours magistraux et conférences.'
+                    'type' => 'amphi',
+                    'active' => true,
                 ],
                 [
                     'nom' => 'Salle B12',
+                    'batiment' => 'Bâtiment B',
                     'capacite' => 40,
-                    'description' => 'Salle de cours standard.'
+                    'type' => 'standard',
+                    'active' => true,
                 ],
                 [
                     'nom' => 'Laboratoire Chimie',
+                    'batiment' => 'Bâtiment Sciences',
                     'capacite' => 24,
-                    'description' => 'Salle équipée pour travaux pratiques de chimie.'
+                    'type' => 'tp',
+                    'active' => true,
                 ],
                 [
                     'nom' => 'Salle Informatique 1',
+                    'batiment' => 'Bâtiment Sciences',
                     'capacite' => 30,
-                    'description' => 'Salle équipée d’ordinateurs et d’un vidéoprojecteur.'
+                    'type' => 'tp',
+                    'active' => true,
                 ],
                 [
                     'nom' => 'Salle de réunion',
+                    'batiment' => 'Bâtiment Administratif',
                     'capacite' => 12,
-                    'description' => 'Petite salle pour réunions d’équipe et soutenances.'
+                    'type' => 'reunion',
+                    'active' => true,
                 ],
             ];
 
@@ -40,8 +50,10 @@ namespace Database\Seeders;
                 Salle::updateOrCreate(
                     ['nom' => $data['nom']],
                     [
+                        'batiment' => $data['batiment'],
                         'capacite' => $data['capacite'],
-                        'description' => $data['description']
+                        'type' => $data['type'],
+                        'active' => $data['active'],
                     ]
                 );
             }

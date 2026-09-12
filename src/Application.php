@@ -11,7 +11,8 @@
     {
         public function __construct(
             private readonly Dispatcher $dispatcher,
-            private readonly InvokerInterface $invoker
+            private readonly InvokerInterface $invoker,
+            private readonly View $view
         ) {
         }
 
@@ -30,14 +31,14 @@
             switch ($routeInfo[0]) {
                 case Dispatcher::NOT_FOUND:
                     http_response_code(404);
-                    View::render('error/404');
+                    $this->view->render('error/404');
                     break;
 
                 case Dispatcher::METHOD_NOT_ALLOWED:
                     $allowedMethods = $routeInfo[1];
                     http_response_code(405);
                     header('Allow: ' . implode(', ', $allowedMethods));
-                    View::render('error/405');
+                    $this->view->render('error/405');
                     break;
 
                 case Dispatcher::FOUND:

@@ -10,15 +10,18 @@ declare(strict_types=1);
     {
         protected $table = 'salles';
 
-        protected $fillable = [
+         protected $fillable = [
             'nom',
+            'batiment',
             'capacite',
-            'description',
+            'type',
+            'active',
         ];
-
+ 
         protected $casts = [
             'id' => 'integer',
             'capacite' => 'integer',
+            'active' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

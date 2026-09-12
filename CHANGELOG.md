@@ -12,3 +12,4 @@ v0.10.0 Configuration du router
 v0.11.0 Configuration du Container d'Injection 
 v0.11.1 Correction des vues 
 v0.12.0 Integration des test unitaire et Integration 
+v0.12.1 Correction sur les responsabilité des classes

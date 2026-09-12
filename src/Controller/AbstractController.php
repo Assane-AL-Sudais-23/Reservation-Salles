@@ -7,10 +7,14 @@
 
     abstract class AbstractController
     {
+        public function __construct(
+            protected readonly View $view
+        ) {
+        }
 
         protected function render(string $template, array $data = []): void
         {
-            View::render($template, $data);
+            $this->view->render($template, $data);
         }
 
         protected function json(array $data, int $statusCode = 200): void

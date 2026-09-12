@@ -21,7 +21,8 @@
 
         public function enregistrerSalle(Salle $salle): Salle
         {
-            return Salle::create($salle->build());
+            $salle->save();
+            return $salle;
         }
 
     }

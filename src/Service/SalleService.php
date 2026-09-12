@@ -8,7 +8,6 @@
     use Illuminate\Support\Collection;
     use App\Repository\SalleRepositoryInterface;
     use  App\DTO\SalleDTOBuilder;
-    use App\DTO\SalleViewDTO;
 
 
     class SalleService {
@@ -32,13 +31,30 @@
         public function enregistrerSalle(CreerSalleDTO $dto): Salle
         {
             $salle = new Salle();
+            $this->hydraterSalle($salle, $dto);
 
+            return $this->salleRepository->enregistrerSalle($salle);
+        }
+
+        public function mettreAJourSalle(int $id, CreerSalleDTO $dto): ?Salle
+        {
+            $salle = $this->salleRepository->retrouverSalleParId($id);
+
+            if ($salle === null) {
+                return null;
+            }
+
+            $this->hydraterSalle($salle, $dto);
+
+            return $this->salleRepository->enregistrerSalle($salle);
+        }
+
+        private function hydraterSalle(Salle $salle, CreerSalleDTO $dto): void
+        {
             $salle->nom = $dto->nom;
             $salle->batiment = $dto->batiment;
             $salle->capacite = $dto->capacite;
             $salle->type = $dto->type;
             $salle->active = $dto->active;
-
-            return $this->salleRepository->enregistrerSalle($salle);
         }
     }
