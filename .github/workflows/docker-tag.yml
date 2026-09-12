@@ -38,7 +38,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: .docker/php/Dockerfile
+          file: Dockerfile
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.GIT_TAG }}
