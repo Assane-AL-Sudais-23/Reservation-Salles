@@ -10,7 +10,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: alsudais23/reservation-salles-app
+      IMAGE_NAME: alsudais23/gestionreservationsalles-render
 
     steps:
       # Étape 1 : Récupérer le code source du dépôt Git
