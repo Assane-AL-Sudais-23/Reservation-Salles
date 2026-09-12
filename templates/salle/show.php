@@ -53,10 +53,12 @@
     </div>
 
     <!-- Actions (Bouton d'édition aligné sur la route GET /salle/{id}/edit) -->
-    <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
-        <a href="/salle/<?= e((string)$salle->id) ?>/edit" style="text-decoration: none; font-weight: 600; color: #ffffff; background-color: #2563eb; padding: 0.625rem 1.25rem; border-radius: 6px; font-size: 0.875rem;">
-            Éditer cette salle
-        </a>
-    </div>
+    <?php if ($utilisateurConnecte->role === \App\Security\Role::ADMIN): ?>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <a href="/salle/<?= e((string)$salle->id) ?>/edit" style="text-decoration: none; font-weight: 600; color: #ffffff; background-color: #2563eb; padding: 0.625rem 1.25rem; border-radius: 6px; font-size: 0.875rem;">
+                Éditer cette salle
+            </a>
+        </div>
+    <?php endif; ?>
 
 </div>

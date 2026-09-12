@@ -3,14 +3,22 @@ declare(strict_types=1);
 
     namespace App\View;
 
+    use App\Security\AuthService;
+
     class View
     {
+        public function __construct(
+            private readonly AuthService $authService
+        ) {
+        }
 
         public function render(string $template, array $data = []): void
         {
+            $data['utilisateurConnecte'] = $this->authService->utilisateurConnecte();
+
             extract($data);
-            $content = __DIR__ . "/../../templates/{$template}.php";
-            require __DIR__ . '/../../templates/layout/base.php';
+            $content = dirname(__DIR__, 2) . "/templates/{$template}.php";
+            require dirname(__DIR__, 2) . '/templates/layout/base.php';
         }
     }
 

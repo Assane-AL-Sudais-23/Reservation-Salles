@@ -12,14 +12,19 @@
     use App\Repository\SalleRepository;
     use App\Repository\ReservationRepositoryInterface;
     use App\Repository\ReservationRepository;
+    use App\Repository\UserRepositoryInterface;
+    use App\Repository\UserRepository;
 
     use App\Service\SalleService;
     use App\Service\ReservationService;
+    use App\Security\AuthService;
     use App\Validator\SalleValidator;
     use App\Validator\ReservationValidator;
+    use App\Validator\AuthValidator;
 
     use App\Controller\SalleController;
     use App\Controller\ReservationController;
+    use App\Controller\AuthController;
     use App\View\View;
     use App\Application;
 
@@ -37,14 +42,18 @@
 
         SalleRepositoryInterface::class => autowire(SalleRepository::class),
         ReservationRepositoryInterface::class => autowire(ReservationRepository::class),
+        UserRepositoryInterface::class => autowire(UserRepository::class),
 
         SalleValidator::class => autowire(SalleValidator::class),
         ReservationValidator::class => autowire(ReservationValidator::class),
+        AuthValidator::class => autowire(AuthValidator::class),
         SalleService::class => autowire(SalleService::class),
         ReservationService::class => autowire(ReservationService::class),
+        AuthService::class => autowire(AuthService::class),
 
         SalleController::class => autowire(SalleController::class),
         ReservationController::class => autowire(ReservationController::class),
+        AuthController::class => autowire(AuthController::class),
 
         Application::class => autowire(Application::class),
     ];

@@ -4,8 +4,8 @@ declare(strict_types=1);
     namespace App\Controller;
 
     use App\DTO\CreerReservationDTOBuilder;
-    use App\Exception\RegleMetierException;
-    use App\Exception\SalleIndisponibleException;
+    use App\Exception\ExceptionMetier;
+    use App\Security\AuthService;
     use App\Service\ReservationService;
     use App\Service\SalleService;
     use App\Validator\ReservationValidator;
@@ -18,6 +18,7 @@ declare(strict_types=1);
             private readonly ReservationService $reservationService,
             private readonly SalleService $salleService,
             private readonly ReservationValidator $reservationValidator,
+            private readonly AuthService $authService,
             View $view
         ) {
             parent::__construct($view);
@@ -55,44 +56,35 @@ declare(strict_types=1);
 
         public function store(): void
         {
-            $data = $_POST;
-            $validation = $this->reservationValidator->validate($data);
+            $this->traiterFormulaire(
+                validator: $this->reservationValidator,
+                data: $_POST,
+                template: 'reservation/form',
+                persister: function (array $donneesValidees): void {
+                    $dto = (new CreerReservationDTOBuilder())
+                        ->fromArray($donneesValidees)
+                        ->build();
 
-            if (!$validation->isValid()) {
-                $salles = $this->salleService->listeSalles();
-                parent::render('reservation/form', [
-                    'salles' => $salles,
-                    'errors' => $validation->errors(),
-                    'old' => $data
-                ]);
-                return;
-            }
-
-            try {
-                $dto = (new CreerReservationDTOBuilder())
-                    ->fromArray($validation->data())
-                    ->build();
-
-                $this->reservationService->enregistrerReservation($dto);
-
-                header('Location: /reservation');
-                exit;
-            } catch (SalleIndisponibleException | RegleMetierException $e) {
-                $salles = $this->salleService->listeSalles();
-                parent::render('reservation/form', [
-                    'salles' => $salles,
-                    'errors' => ['global' => $e->getMessage()],
-                    'old' => $data
-                ]);
-            }
+                    $userId = $this->authService->utilisateurConnecte()?->id;
+                    $this->reservationService->enregistrerReservation($dto, $userId);
+                },
+                urlRedirection: '/reservation',
+                donneesSupplementaires: ['salles' => $this->salleService->listeSalles()]
+            );
         }
 
         public function cancel(array $vars): void
         {
             $id = (int)$vars['id'];
-            $this->reservationService->annulerReservation($id);
 
-            header('Location: /reservation');
-            exit;
+            try {
+                $this->reservationService->annulerReservation($id);
+            } catch (ExceptionMetier $e) {
+                http_response_code(404);
+                $this->render('error/404', ['message' => $e->getMessage()]);
+                return;
+            }
+
+            $this->redirect('/reservation');
         }
     }

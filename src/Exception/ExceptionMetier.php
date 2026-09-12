@@ -5,13 +5,14 @@
 
     use Throwable;
 
-        class ReservationIntrouvableException extends ExceptionMetier
+        abstract class ExceptionMetier extends ApplicationException
     {
             public function __construct(
                 string $message,
+                int $statusCode = 422,
                 int $code = 0,
                 ?Throwable $previous = null
             ) {
-                parent::__construct($message, 404, $code, $previous);
+                parent::__construct($message, $statusCode, $code, $previous);
             }
     }

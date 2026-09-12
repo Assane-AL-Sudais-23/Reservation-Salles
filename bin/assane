@@ -8,8 +8,10 @@ use Database\Migrations\CreateReservationsTable;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+$envFile = __DIR__ . '/../.env';
+if (getenv('DB_HOST') === false && file_exists($envFile)) {
+    Dotenv::createImmutable(__DIR__ . '/..')->load();
+}
 
 if (file_exists(__DIR__ . '/../config/database.php')) {
     require_once __DIR__ . '/../config/database.php';

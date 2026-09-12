@@ -44,20 +44,16 @@
 
         public function store(): void
         {
-            $data = $_POST;
-            $validation = $this->salleValidator->validate($data);
-
-            if (!$validation->isValid()) {
-                $this->render('salle/form', [
-                    'errors' => $validation->errors(),
-                    'old'    => $data
-                ]);
-                return;
-            }
-
-            $dto = (new CreerSalleDTOBuilder())->fromArray($validation->data())->build();
-            $this->salleService->enregistrerSalle($dto);
-            $this->redirect('/salle');
+            $this->traiterFormulaire(
+                validator: $this->salleValidator,
+                data: $_POST,
+                template: 'salle/form',
+                persister: function (array $donneesValidees): void {
+                    $dto = (new CreerSalleDTOBuilder())->fromArray($donneesValidees)->build();
+                    $this->salleService->enregistrerSalle($dto);
+                },
+                urlRedirection: '/salle'
+            );
         }
 
         public function edit(array $vars): void
@@ -78,25 +74,21 @@
         public function update(array $vars): void
         {
             $id = (int) ($vars['id'] ?? 0);
-            $data = $_POST;
-            $validation = $this->salleValidator->validate($data);
 
-            if (!$validation->isValid()) {
-                $this->render('salle/form', [
-                    'errors' => $validation->errors(),
-                    'old'    => $data
-                ]);
-                return;
-            }
-
-            $dto = (new CreerSalleDTOBuilder())->fromArray($validation->data())->build();
-            $salle = $this->salleService->mettreAJourSalle($id, $dto);
-
-            if ($salle === null) {
+            if ($this->salleService->retrouverSalle($id) === null) {
                 $this->render('error/404', ['message' => 'Salle introuvable']);
                 return;
             }
 
-            $this->redirect('/salle/' . $id);
+            $this->traiterFormulaire(
+                validator: $this->salleValidator,
+                data: $_POST,
+                template: 'salle/form',
+                persister: function (array $donneesValidees) use ($id): void {
+                    $dto = (new CreerSalleDTOBuilder())->fromArray($donneesValidees)->build();
+                    $this->salleService->mettreAJourSalle($id, $dto);
+                },
+                urlRedirection: '/salle/' . $id
+            );
         }
     }

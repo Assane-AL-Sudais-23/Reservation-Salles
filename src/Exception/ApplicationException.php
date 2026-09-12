@@ -11,7 +11,7 @@ abstract class ApplicationException extends RuntimeException
 {
     public function __construct(
         string $message,
-        private readonly int $statusCode,
+        private readonly int $statusCode = 500,
         int $code = 0,
         ?Throwable $previous = null
     ) {

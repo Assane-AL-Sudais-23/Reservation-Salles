@@ -45,7 +45,7 @@
             return $this->reservationRepository->retrouverReservationParId($id);
         }
 
-        public function enregistrerReservation(CreerReservationDTO $dto): Reservation
+        public function enregistrerReservation(CreerReservationDTO $dto, ?int $userId = null): Reservation
         {
             $salle = $this->salleRepository->retrouverSalleParId($dto->salleId);
 
@@ -56,6 +56,7 @@
             $this->verifierAbsenceDeConflit($dto->salleId, $dto->dateDebut, $dto->dateFin);
 
             $reservation = new Reservation();
+            $reservation->user_id = $userId;
             $reservation->salle_id = $dto->salleId;
             $reservation->responsable = $dto->responsable;
             $reservation->email = $dto->email;

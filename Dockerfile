@@ -23,4 +23,4 @@ RUN echo '[supervisord]' > /etc/supervisord.conf && \
 
 EXPOSE 10000
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["sh", "-c", "php /var/www/html/bin/assane assane:execute && exec /usr/bin/supervisord -c /etc/supervisord.conf"]

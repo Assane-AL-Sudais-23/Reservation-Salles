@@ -3,31 +3,34 @@ declare(strict_types=1);
 
     namespace App\Model;
 
+    use App\Security\Role;
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\Relations\HasMany;
 
-    class Salle extends Model
+    class User extends Model
     {
-        protected $table = 'salles';
+        protected $table = 'users';
 
         protected $fillable = [
             'nom',
-            'batiment',
-            'capacite',
-            'type',
-            'active',
+            'email',
+            'password',
+            'role',
+        ];
+
+        protected $hidden = [
+            'password',
         ];
 
         protected $casts = [
             'id' => 'integer',
-            'capacite' => 'integer',
-            'active' => 'boolean',
+            'role' => Role::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
 
         public function reservations(): HasMany
         {
-            return $this->hasMany(Reservation::class, 'salle_id', 'id');
+            return $this->hasMany(Reservation::class, 'user_id', 'id');
         }
     }

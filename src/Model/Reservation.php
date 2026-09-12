@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
     namespace App\Model;
 
@@ -10,7 +10,7 @@ declare(strict_types=1);
     {
         protected $table = 'reservations';
 
-         protected $fillable = [
+        protected $fillable = [
             'user_id',
             'salle_id',
             'responsable',
@@ -20,7 +20,7 @@ declare(strict_types=1);
             'date_fin',
             'statut',
         ];
- 
+
         protected $casts = [
             'id' => 'integer',
             'user_id' => 'integer',
@@ -34,5 +34,10 @@ declare(strict_types=1);
         public function salle(): BelongsTo
         {
             return $this->belongsTo(Salle::class, 'salle_id', 'id');
+        }
+
+        public function user(): BelongsTo
+        {
+            return $this->belongsTo(User::class, 'user_id', 'id');
         }
     }

@@ -14,7 +14,7 @@ namespace Database\Migrations;
                     $table->string('nom');
                     $table->string('email')->unique();
                     $table->string('password');
-                    $table->enum('role', ['user', 'admin'])->default('user');
+                    $table->enum('role', ['admin', 'responsable'])->default('responsable');
                     $table->timestamps();
                 });
                 echo "Table 'users' créée.\n";

@@ -4,6 +4,8 @@
     namespace App\Controller;
 
     use App\View\View;
+    use App\Validator\ValidatorInterface;
+    use App\Exception\ExceptionMetier;
 
     abstract class AbstractController
     {
@@ -28,5 +30,34 @@
         {
             header("Location: {$url}");
             exit;
+        }
+
+        protected function traiterFormulaire(
+            ValidatorInterface $validator,
+            array $data,
+            string $template,
+            callable $persister,
+            string $urlRedirection,
+            array $donneesSupplementaires = []
+        ): void {
+            $validation = $validator->validate($data);
+ 
+            if (!$validation->isValid()) {
+                $this->render($template, array_merge($donneesSupplementaires, [
+                    'errors' => $validation->errors(),
+                    'old'    => $data,
+                ]));
+                return;
+            }
+ 
+            try {
+                $persister($validation->data());
+                $this->redirect($urlRedirection);
+            } catch (ExceptionMetier $e) {
+                $this->render($template, array_merge($donneesSupplementaires, [
+                    'errors' => ['global' => $e->getMessage()],
+                    'old'    => $data,
+                ]));
+            }
         }
     }
