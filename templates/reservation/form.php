@@ -29,7 +29,7 @@
             <select name="salle_id" id="salle_id">
                 <option value="">-- Sélectionnez une salle --</option>
                 <?php foreach ($salles as $salle): ?>
-                    <option value="<?= e((string)$salle->id) ?>" <?= ($old['salle_id'] ?? '') == $salle->id ? 'selected' : '' ?>
+                    <option value="<?= e((string)$salle->id) ?>" <?= ($old['salle_id'] ?? '') == $salle->id ? 'selected' : '' ?>>
                         <?= e($salle->nom) ?> (Capacité: <?= e((string)$salle->capacite) ?> pers.)
                     </option>
                 <?php endforeach; ?>
