@@ -32,6 +32,17 @@
                         + Nouvelle Salle
                     </a>
                 </li>
+                <li>
+                    <?php if ($utilisateurConnecte !== null): ?>
+                        <form action="/logout" method="POST" style="margin: 0;">
+                            <button type="submit" style="margin: 0; padding: 0.5rem 0.75rem;">Se déconnecter</button>
+                        </form>
+                    <?php else: ?>
+                        <a href="/login" style="text-decoration: none; font-weight: 600; color: #ffffff; background-color: #16a34a; padding: 0.5rem 1rem; border-radius: 6px;">
+                            Se connecter
+                        </a>
+                    <?php endif; ?>
+                </li>
             </ul>
         </nav>
     </header>
